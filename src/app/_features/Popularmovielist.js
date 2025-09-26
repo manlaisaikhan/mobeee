@@ -54,7 +54,7 @@ export const PopularMovieList = () => {
   }
   return (
     <div className="w-full flex flex-col items-start px-10 ">
-      <SectionHeader SectionTitle={"Popular"} />
+      <SectionHeader SectionTitle="Popular" seeMoreLink="/popular" />
 
       <div className=" grid grid-cols-5  gap-[60px] ">
         {popularMovieList.map((movie, index) => (

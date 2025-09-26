@@ -1,15 +1,14 @@
 "use client";
 
+import { PopularMovieList02 } from "@/app/_features/Popular02";
 import { Footer } from "../_features/footer";
 import { Header } from "../_features/Header";
-
-import { UpcomingMovieList02 } from "../_features/Upcoming02";
 
 export default function Home() {
   return (
     <div>
       <Header />
-      <UpcomingMovieList02 />
+      <PopularMovieList02 />
       <div className="mt-20">
         <Footer />
       </div>

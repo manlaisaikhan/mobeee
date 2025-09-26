@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { Poster } from "../_components/Poster";
 import { SectionHeader } from "../_components/SectionHeader";
 
 const apilink =
-  "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
+  "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1";
 
 const options = {
   method: "GET",
@@ -16,15 +15,15 @@ const options = {
   },
 };
 
-export const UpcomingMovieList = () => {
-  const [upcomingMovieList, setUpcomingMovieList] = useState([]);
+export const TopRatedMovieList02 = () => {
+  const [TopRatedMovieList02, setTopRatedMovieList02] = useState([]);
   const [loading, setLouding] = useState(false);
   const getData = async () => {
     setLouding(true);
     try {
       const data = await fetch(apilink, options);
       const jsonData = await data.json();
-      setUpcomingMovieList(jsonData.results.splice(10));
+      setTopRatedMovieList02(jsonData.results);
       setLouding(false);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -54,10 +53,10 @@ export const UpcomingMovieList = () => {
   }
   return (
     <div className="w-full flex flex-col items-start px-10 ">
-      <SectionHeader SectionTitle="Upcoming" seeMoreLink="/upcoming" />
+      <SectionHeader SectionTitle="Toprated" />
 
-      <div className=" grid grid-cols-5  gap-[60px] ">
-        {upcomingMovieList.map((movie, index) => (
+      <div className="w-full max-w-[2100px] mx-auto grid grid-cols-5 gap-[60px] justify-items-center">
+        {TopRatedMovieList02.map((movie, index) => (
           <Poster
             key={index}
             posterImage={`https://image.tmdb.org/t/p/original${movie.poster_path}`}

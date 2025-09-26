@@ -53,7 +53,7 @@ export const TopRatedMovieList = () => {
   }
   return (
     <div className="w-full flex flex-col items-start px-10 ">
-      <SectionHeader SectionTitle={"TopRated"} />
+      <SectionHeader SectionTitle="Toprated" seeMoreLink="/Toprated" />
 
       <div className=" grid grid-cols-5  gap-[60px] ">
         {topRatedMovieList.map((movie, index) => (

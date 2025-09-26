@@ -16,15 +16,15 @@ const options = {
   },
 };
 
-export const UpcomingMovieList = () => {
-  const [upcomingMovieList, setUpcomingMovieList] = useState([]);
+export const UpcomingMovieList02 = () => {
+  const [UpcomingMovieList02, setUpcomingMovieList02] = useState([]);
   const [loading, setLouding] = useState(false);
   const getData = async () => {
     setLouding(true);
     try {
       const data = await fetch(apilink, options);
       const jsonData = await data.json();
-      setUpcomingMovieList(jsonData.results.splice(10));
+      setUpcomingMovieList02(jsonData.results);
       setLouding(false);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -36,13 +36,13 @@ export const UpcomingMovieList = () => {
   }, []);
   if (loading) {
     return (
-      <div className="w-[1277px] flex flex-col gap-[32px]">
-        <div className="flex justify-between w-full h-8">
+      <div className="w-[1277px] flex flex-col  gap-[40px]  ">
+        <div className="flex justify-between items-center   w-full h-8">
           <div className="bg-[#F4F4F5] w-[250px] rounded-2xl"></div>
           <div className="bg-[#F4F4F5] w-[165px] rounded-2xl"></div>
         </div>
         <div className="[w-1277px] flex flex-wrap gap-8">
-          {Array.from({ length: 10 }).map((_, i) => {
+          {Array.from({ length: 20 }).map((_, i) => {
             <div
               key={i}
               className="bg-[#F4F4F5] w-[229px]h-[439px] rounded-lg"
@@ -53,11 +53,11 @@ export const UpcomingMovieList = () => {
     );
   }
   return (
-    <div className="w-full flex flex-col items-start px-10 ">
-      <SectionHeader SectionTitle="Upcoming" seeMoreLink="/upcoming" />
+    <div className="w-full flex flex-col items-start px-30 gap-y-3 ">
+      <SectionHeader SectionTitle="Upcoming" />
 
-      <div className=" grid grid-cols-5  gap-[60px] ">
-        {upcomingMovieList.map((movie, index) => (
+      <div className="w-full max-w-[2100px] mx-auto grid grid-cols-5 gap-[60px] justify-items-center">
+        {UpcomingMovieList02.map((movie, index) => (
           <Poster
             key={index}
             posterImage={`https://image.tmdb.org/t/p/original${movie.poster_path}`}

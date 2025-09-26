@@ -5,7 +5,7 @@ import { MovieIcon } from "../icons/movieicon";
 
 export const Footer = () => {
   return (
-    <div className="w-full h-[280px] bg-indigo-700 flex justify-between items-start px-20 py-10 text-white">
+    <div className="w-full h-[280px] bg-indigo-700 flex justify-between items-start px-20 py-10  text-white">
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2 font-bold text-lg">
           <FilmIcons />

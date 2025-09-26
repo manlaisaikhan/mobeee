@@ -36,7 +36,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-[1440px] m-auto h-screen z-1">
+    <div className="w-[1440px] m-auto h-screen z-1 gap-[25px] ">
       <div className="flex flex-col gap-[24px]">
         <Header />
         <HeroSection />
