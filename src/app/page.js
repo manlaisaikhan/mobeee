@@ -1,13 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-
-import { HeroSection } from "./_components/HeroSection";
-import { MovieList } from "./_components/MovieList";
-import { Footer } from "./_components/footer";
-import { UpcomingMovieList } from "./_components/MovieList";
-import { PopularMovieList } from "./_components/Popularmovielist";
-import { TopRatedMovieList } from "./_components/TopratedMovieList";
-import { Header } from "./_components/Header";
+import { Header } from "./_features/Header";
+import { UpcomingMovieList } from "./_features/MovieList";
+import { PopularMovieList } from "./_features/Popularmovielist";
+import { TopRatedMovieList } from "./_features/TopratedMovieList";
+import { Footer } from "./_features/footer";
+import { HeroSection } from "./_features/HeroSection";
 
 const apilink =
   "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";

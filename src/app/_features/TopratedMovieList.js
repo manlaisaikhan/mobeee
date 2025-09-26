@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Poster } from "./Poster";
-import { SectionHeader } from "./SectionHeader";
+import { Poster } from "../_components/Poster";
+import { SectionHeader } from "../_components/SectionHeader";
 
 const apilink =
-  "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
+  "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1";
 
 const options = {
   method: "GET",
@@ -15,15 +15,15 @@ const options = {
   },
 };
 
-export const UpcomingMovieList = () => {
-  const [upcomingMovieList, setUpcomingMovieList] = useState([]);
+export const TopRatedMovieList = () => {
+  const [topRatedMovieList, setTopRatedMovieList] = useState([]);
   const [loading, setLouding] = useState(false);
   const getData = async () => {
     setLouding(true);
     try {
       const data = await fetch(apilink, options);
       const jsonData = await data.json();
-      setUpcomingMovieList(jsonData.results.splice(10));
+      setTopRatedMovieList(jsonData.results.splice(10));
       setLouding(false);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -53,10 +53,10 @@ export const UpcomingMovieList = () => {
   }
   return (
     <div className="w-full flex flex-col items-start px-10 ">
-      <SectionHeader SectionTitle={"Upcoming"} />
+      <SectionHeader SectionTitle={"TopRated"} />
 
       <div className=" grid grid-cols-5  gap-[60px] ">
-        {upcomingMovieList.map((movie, index) => (
+        {topRatedMovieList.map((movie, index) => (
           <Poster
             key={index}
             posterImage={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
