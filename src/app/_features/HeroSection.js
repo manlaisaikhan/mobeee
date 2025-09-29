@@ -74,7 +74,15 @@ export const HeroSection = () => {
                   {movie.overview}
                 </p>
                 <div className="mt-2">
-                  <button className="flex items-center gap-2 px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition">
+                  <button
+                    onClick={() =>
+                      window.open(
+                        `https://www.youtube.com/results?search_query=${movie.title} trailer`,
+                        "_blank"
+                      )
+                    }
+                    className="flex items-center gap-2 px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition"
+                  >
                     <PLayIcons />
                     <span>Watch Trailer</span>
                   </button>
@@ -85,7 +93,6 @@ export const HeroSection = () => {
         ))}
       </div>
 
-      {/* Prev button (hidden on first slide) */}
       {currentIndex > 0 && (
         <button
           onClick={prevSlide}
@@ -95,7 +102,6 @@ export const HeroSection = () => {
         </button>
       )}
 
-      {/* Next button (hidden on last slide) */}
       {currentIndex < movies.length - 1 && (
         <button
           onClick={nextSlide}
