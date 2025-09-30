@@ -1,5 +1,6 @@
 "use client";
 
+import { Pagination } from "../_components/Pagination";
 import { Footer } from "../_features/footer";
 import { Header } from "../_features/Header";
 
@@ -10,6 +11,7 @@ export default function Home() {
     <div>
       <Header />
       <UpcomingMovieList02 />
+
       <div className="mt-20">
         <Footer />
       </div>

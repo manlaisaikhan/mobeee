@@ -17,19 +17,40 @@ const options = {
 export const HeroSection = () => {
   const [movies, setMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showTrailer, setShowTrailer] = useState(false);
+  const [trailerKey, setTrailerKey] = useState(null);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         const res = await fetch(apiLink, options);
         const json = await res.json();
-        setMovies(json.results.slice(0, 3));
+        setMovies(json.results.slice(0, 5));
       } catch (err) {
         console.error("Fetch error:", err);
       }
     };
     fetchMovies();
   }, []);
+  // 🎬 Trailer авах функц
+  const fetchTrailer = async (movieId) => {
+    try {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`,
+        options
+      );
+      const json = await res.json();
+      const trailer = json.results.find((vid) => vid.type === "Trailer");
+      if (trailer) {
+        setTrailerKey(trailer.key);
+        setShowTrailer(true);
+      } else {
+        alert("Trailer not found!");
+      }
+    } catch (err) {
+      console.error("Trailer fetch error:", err);
+    }
+  };
 
   const nextSlide = () => {
     setCurrentIndex((prev) => Math.min(prev + 1, movies.length - 1));
@@ -75,15 +96,11 @@ export const HeroSection = () => {
                 </p>
                 <div className="mt-2">
                   <button
-                    onClick={() =>
-                      window.open(
-                        `https://www.youtube.com/results?search_query=${movie.title} trailer`,
-                        "_blank"
-                      )
-                    }
+                    onClick={() => fetchTrailer(movie.id)}
                     className="flex items-center gap-2 px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition"
                   >
                     <PLayIcons />
+
                     <span>Watch Trailer</span>
                   </button>
                 </div>
@@ -109,6 +126,30 @@ export const HeroSection = () => {
         >
           ❯
         </button>
+      )}
+      {showTrailer && (
+        <div className="fixed inset-0 bg-black/70 flex bg-opacity-70  items-start justify-center p-30 z-50">
+          <div className="  overflow-hidden shadow-xl bg-black rounded-xl p-4 relative w-[800px] h-[500px]">
+            <button
+              onClick={() => setShowTrailer(false)}
+              className=" absolute top-2 right-1 text-white  px-3 py-1 rounded hover:bg-black"
+            >
+              X
+            </button>
+            {trailerKey ? (
+              <iframe
+                width="100%"
+                height="500"
+                src={`https://www.youtube.com/embed/${trailerKey}`}
+                title="Trailer"
+                allow="accelorometer; autoplay clipboard-write encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <p className="text-white"> No Trailer available</p>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
