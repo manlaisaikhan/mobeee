@@ -1,23 +1,36 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { JijegOd } from "../icons/jijegod";
 
 export const Poster = (props) => {
-  const { posterImage, posterTitle, rating } = props;
+  const { posterImage, posterTitle, rating, movieId } = props;
+  const router = useRouter();
+
+  const handleMovieClick = () => {
+    router.push(`/movie-details/${movieId}`);
+  };
+
   return (
-    <div className=" grid w-[229px] h-[439px] rounded-md bg-gray-100   overflow-hidden ">
+    <div
+      className="grid w-[229px] h-[439px] rounded-md bg-gray-100 overflow-hidden cursor-pointer"
+      onClick={handleMovieClick}
+    >
       <img
         src={posterImage}
-        className=" grid w-full h-[340px]  object-cover "
+        alt={posterTitle}
+        className="w-full h-[340px] object-cover"
       />
 
-      <div className="flex  flex-col  ">
+      <div className="flex flex-col p-2">
         <div className="flex items-center gap-1">
           <JijegOd />
-          <span className=" flex text-xs ">
-            {rating}/<span className="  text-black-300">10</span>
+          <span className="text-xs">
+            {rating}/<span className="text-gray-500">10</span>
           </span>
         </div>
         <div>
-          <p className=" flex p-1/2 left-1 text-lg">{posterTitle}</p>
+          <p className="text-lg">{posterTitle}</p>
         </div>
       </div>
     </div>
