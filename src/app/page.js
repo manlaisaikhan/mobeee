@@ -6,6 +6,7 @@ import { PopularMovieList } from "./_features/Popularmovielist";
 import { TopRatedMovieList } from "./_features/TopratedMovieList";
 import { Footer } from "./_features/footer";
 import { HeroSection } from "./_features/HeroSection";
+import { IsDark } from "./_components/isdarkmode";
 
 const apilink =
   "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";
