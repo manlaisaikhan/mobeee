@@ -13,7 +13,7 @@ export const Poster = (props) => {
 
   return (
     <div
-      className="grid w-[229px] h-[439px] rounded-md bg-gray-100 overflow-hidden cursor-pointer"
+      className="grid w-[229px] h-[439px] rounded-md bg-gray-100 overflow-hidden cursor-pointer dark:bg-black"
       onClick={handleMovieClick}
     >
       <img

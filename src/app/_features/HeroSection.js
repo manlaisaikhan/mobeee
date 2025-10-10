@@ -32,7 +32,7 @@ export const HeroSection = () => {
     };
     fetchMovies();
   }, []);
-  // 🎬 Trailer авах функц
+
   const fetchTrailer = async (movieId) => {
     try {
       const res = await fetch(
@@ -60,10 +60,11 @@ export const HeroSection = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  if (movies.length === 0) return <p className="text-white">Loading...</p>;
+  if (movies.length === 0)
+    return <p className="text-white mt-[72px]">Loading...</p>;
 
   return (
-    <div className="w-[1440px] h-[600px] relative overflow-hidden">
+    <div className="w-[1440px] h-[600px] relative overflow-hidden mt-[72px]">
       <div
         className="flex h-full transition-transform duration-700"
         style={{ transform: `translateX(-${currentIndex * 1440}px)` }}
@@ -76,7 +77,7 @@ export const HeroSection = () => {
             <img
               src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
               alt={movie.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover z-0"
             />
             <div className="absolute top-0 left-20 p-12 flex items-center h-full text-white">
               <div className="flex flex-col gap-6 max-w-[600px] transition-all duration-500">
@@ -100,7 +101,6 @@ export const HeroSection = () => {
                     className="flex items-center gap-2 px-5 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition"
                   >
                     <PLayIcons />
-
                     <span>Watch Trailer</span>
                   </button>
                 </div>
@@ -127,14 +127,15 @@ export const HeroSection = () => {
           ❯
         </button>
       )}
+
       {showTrailer && (
-        <div className="fixed inset-0 bg-black/70 flex bg-opacity-70  items-start justify-center p-30 z-50">
-          <div className="  overflow-hidden shadow-xl bg-black rounded-xl p-4 relative w-[800px] h-[500px]">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-6 z-[9999]">
+          <div className="overflow-hidden shadow-xl bg-black rounded-xl p-4 relative w-[800px] h-[500px]">
             <button
               onClick={() => setShowTrailer(false)}
-              className=" absolute top-2 right-1 text-white  px-3 py-1 rounded hover:bg-black"
+              className="absolute top-2 right-2 text-white px-3 py-1 rounded hover:bg-gray-800"
             >
-              X
+              ✕
             </button>
             {trailerKey ? (
               <iframe
@@ -142,11 +143,11 @@ export const HeroSection = () => {
                 height="500"
                 src={`https://www.youtube.com/embed/${trailerKey}`}
                 title="Trailer"
-                allow="accelorometer; autoplay clipboard-write encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
             ) : (
-              <p className="text-white"> No Trailer available</p>
+              <p className="text-white">No Trailer available</p>
             )}
           </div>
         </div>

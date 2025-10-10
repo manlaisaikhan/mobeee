@@ -1,4 +1,5 @@
 import { RigthIcons } from "../icons/rigthicon";
+import { MdNavigateNext } from "react-icons/md";
 import Link from "next/link";
 
 export const SectionHeader = ({ SectionTitle, seeMoreLink = "/" }) => {
@@ -10,7 +11,7 @@ export const SectionHeader = ({ SectionTitle, seeMoreLink = "/" }) => {
         className="flex items-center text-xs gap-1 hover:underline"
       >
         <span>See more</span>
-        <RigthIcons />
+        <MdNavigateNext />
       </Link>
     </div>
   );

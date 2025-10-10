@@ -6,7 +6,6 @@ import { PopularMovieList } from "./_features/Popularmovielist";
 import { TopRatedMovieList } from "./_features/TopratedMovieList";
 import { Footer } from "./_features/footer";
 import { HeroSection } from "./_features/HeroSection";
-import { IsDark } from "./_components/isdarkmode";
 
 const apilink =
   "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";
@@ -37,7 +36,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-[1440px] m-auto h-screen z-1 gap-[25px] ">
+    <div className="w-[1440px] m-auto h-screen z-1 gap-[25px] dark:bg-black">
       <div className="flex flex-col gap-[24px]">
         <Header />
         <HeroSection />
