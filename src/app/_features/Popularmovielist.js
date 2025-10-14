@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { Poster } from "../_components/Poster";
 import { SectionHeader } from "../_components/SectionHeader";
 
@@ -18,45 +17,57 @@ const options = {
 
 export const PopularMovieList = () => {
   const [popularMovieList, setPopularMovieList] = useState([]);
-  const [loading, setLouding] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const getData = async () => {
-    setLouding(true);
     try {
       const data = await fetch(apilink, options);
       const jsonData = await data.json();
-      setPopularMovieList(jsonData.results.splice(10));
-      setLouding(false);
+
+      // Loader-г бага зэрэг удаашруулъя (2 секунд)
+      setTimeout(() => {
+        setPopularMovieList(jsonData.results.slice(0, 10));
+        setLoading(false);
+      }, 2000);
     } catch (err) {
       console.error("Fetch error:", err);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  // ✅ LOADING SKELETON
   if (loading) {
     return (
-      <div className="w-[1277px] flex flex-col gap-[32px]">
-        <div className="flex justify-between w-full h-8">
-          <div className="bg-[#F4F4F5] w-[250px] rounded-2xl"></div>
-          <div className="bg-[#F4F4F5] w-[165px] rounded-2xl"></div>
+      <div className="w-full flex flex-col gap-8 px-10 animate-fadeIn">
+        {/* Title skeleton */}
+        <div className="flex justify-between items-center w-full animate-pulse">
+          <div className="bg-gray-700/30 dark:bg-gray-200/20 w-[200px] h-6 rounded-full"></div>
+          <div className="bg-gray-700/30 dark:bg-gray-200/20 w-[100px] h-6 rounded-full"></div>
         </div>
-        <div className="[w-1277px] flex flex-wrap gap-8">
-          {Array.from({ length: 10 }).map((_, i) => {
+
+        {/* Posters skeleton */}
+        <div className="grid grid-cols-5 gap-[60px] mt-4">
+          {Array.from({ length: 10 }).map((_, i) => (
             <div
               key={i}
-              className="bg-[#F4F4F5] w-[229px]h-[439px] rounded-lg"
-            ></div>;
-          })}
+              className="bg-gray-700/30 dark:bg-gray-200/20 w-[229px] h-[439px] rounded-2xl animate-pulse"
+            ></div>
+          ))}
         </div>
       </div>
     );
   }
+
+  // ✅ MAIN CONTENT
   return (
-    <div className="w-full flex flex-col items-start px-10 ">
+    <div className="w-full flex flex-col items-start px-10 animate-fadeIn">
       <SectionHeader SectionTitle="Popular" seeMoreLink="/popular" />
 
-      <div className=" grid grid-cols-5  gap-[60px] ">
+      <div className="grid grid-cols-5 gap-[60px] mt-6">
         {popularMovieList.map((movie, index) => (
           <Poster
             key={index}

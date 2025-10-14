@@ -3,6 +3,7 @@
 import { PLayIcons } from "@/app/icons/playicons";
 import { StarIcons } from "@/app/icons/staricons";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const options = {
   method: "GET",
@@ -15,35 +16,45 @@ const options = {
 
 export const MovieDetails01 = ({ id }) => {
   const [movie, setMovie] = useState(null);
+  const [similarMovies, setSimilarMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showTrailer, setShowTrailer] = useState(false);
   const [trailerKey, setTrailerKey] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!id) return;
 
-    const apiLink = `https://api.themoviedb.org/3/movie/${id}?language=en-US&append_to_response=credits,videos`;
-
     const getData = async () => {
       try {
         setLoading(true);
-        const res = await fetch(apiLink, options);
-        const data = await res.json();
 
-        if (data.success === false) {
-          setMovie(null);
-        } else {
-          setMovie(data);
-          const trailer = data.videos?.results?.find(
-            (vid) => vid.type === "Trailer"
-          );
-          if (trailer) setTrailerKey(trailer.key);
-        }
+        // ✅ Гол киноны мэдээлэл
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}?language=en-US&append_to_response=credits,videos`,
+          options
+        );
+        const data = await res.json();
+        setMovie(data);
+
+        const trailer = data.videos?.results?.find(
+          (vid) => vid.type === "Trailer"
+        );
+        if (trailer) setTrailerKey(trailer.key);
+
+        // ✅ Ижил төстэй кинонууд
+        const similarRes = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/similar?language=en-US&page=1`,
+          options
+        );
+        const similarData = await similarRes.json();
+        setSimilarMovies(similarData.results?.slice(0, 5) || []);
       } catch (err) {
         console.error("Fetch error:", err);
-        setMovie(null);
       } finally {
         setLoading(false);
+        setTimeout;
+        () => setLoading(false), 700;
       }
     };
 
@@ -52,8 +63,42 @@ export const MovieDetails01 = ({ id }) => {
 
   if (loading)
     return (
-      <div className="p-6 text-center text-lg font-semibold text-gray-500">
-        Loading...
+      <div className="p-10 w-full max-w-[1440px] mx-auto animate-pulse">
+        <div className="flex justify-between mb-8">
+          <div className="bg-gray-500 w-[300px] h-10 rounded"></div>
+          <div className="bg-gray-500 w-[150px] h-6 rounded"></div>
+        </div>
+
+        <div className="flex gap-10">
+          <div className="bg-gray-600 w-[300px] h-[428px] rounded-lg"></div>
+          <div className="bg-gray-600 w-[788px] h-[428px] rounded-lg"></div>
+        </div>
+
+        <div className="flex flex-wrap gap-3 mt-8">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-gray-500 h-7 w-[100px] rounded-full"
+            ></div>
+          ))}
+        </div>
+
+        <div className="bg-gray-600 w-full h-[120px] mt-8 rounded-lg"></div>
+
+        <div className="mt-8 flex flex-col gap-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="bg-gray-600 w-full h-[30px] rounded"></div>
+          ))}
+        </div>
+
+        <div className="mt-10 grid grid-cols-5 gap-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-gray-600 w-full h-[320px] rounded-lg"
+            ></div>
+          ))}
+        </div>
       </div>
     );
 
@@ -64,7 +109,6 @@ export const MovieDetails01 = ({ id }) => {
       </div>
     );
 
-  // --- Crew / Cast info ---
   const crew = movie.credits?.crew || [];
   const cast = movie.credits?.cast || [];
 
@@ -110,14 +154,12 @@ export const MovieDetails01 = ({ id }) => {
 
       {/* POSTER + BACKDROP */}
       <div className="flex flex-row gap-10 relative items-start">
-        {/* Poster */}
         <img
           className="w-[300px] h-[428px] object-cover rounded-lg shadow-md"
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title}
         />
 
-        {/* Backdrop */}
         <div
           className="relative w-[788px] h-[428px] rounded-lg overflow-hidden shadow-lg"
           style={{
@@ -128,7 +170,6 @@ export const MovieDetails01 = ({ id }) => {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 
-          {/* Trailer Button */}
           {trailerKey && (
             <button
               onClick={() => setShowTrailer(true)}
@@ -143,7 +184,6 @@ export const MovieDetails01 = ({ id }) => {
             </button>
           )}
 
-          {/* Text Overlay */}
           <div className="absolute left-5 top-5 max-w-[60%]">
             <h2 className="text-2xl font-bold drop-shadow text-white">
               {movie.title}
@@ -189,6 +229,46 @@ export const MovieDetails01 = ({ id }) => {
           <p className="font-normal">{stars.length ? stars.join(", ") : "-"}</p>
         </div>
       </div>
+
+      {/* ✅ MORE LIKE THIS */}
+      {similarMovies.length > 0 && (
+        <div className="flex flex-col gap-4 w-full mt-10">
+          <div className="flex justify-between items-center">
+            <h2 className="text-[22px] font-bold">More like this</h2>
+            <button
+              onClick={() => router.push(`/movie-details/${id}/similarmovies`)}
+              className="text-blue-500 hover:underline"
+            >
+              See more →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-5 gap-6">
+            {similarMovies.map((sim) => (
+              <div
+                key={sim.id}
+                onClick={() => router.push(`/movie/${sim.id}`)}
+                className="cursor-pointer hover:scale-105 transition-transform duration-200"
+              >
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${sim.poster_path}`}
+                  alt={sim.title}
+                  className="rounded-md w-full h-[320px] object-cover"
+                />
+                <div className="mt-2 flex items-center gap-2">
+                  <StarIcons className="w-4 h-4 text-yellow-400" />
+                  <span className="text-sm text-gray-300">
+                    {sim.vote_average.toFixed(1)}
+                  </span>
+                </div>
+                <p className="text-sm font-semibold text-white truncate">
+                  {sim.title}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* TRAILER MODAL */}
       {showTrailer && (

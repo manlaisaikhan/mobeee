@@ -19,11 +19,13 @@ export const Genredetails = () => {
   const [genreMovies, setGenreMovies] = useState([]);
   const [genresList, setGenresList] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
-  const [page, setPage] = useState(1); // 🆕 pagination page state
-  const totalPages = Math.ceil(totalResults / 20); // TMDB default 20 per page
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const totalPages = Math.ceil(totalResults / 20);
 
   const getGenreMovies = async () => {
     try {
+      setLoading(true);
       const res = await fetch(
         `https://api.themoviedb.org/3/discover/movie?language=en-US&with_genres=${id}&page=${page}`,
         options
@@ -31,8 +33,12 @@ export const Genredetails = () => {
       const data = await res.json();
       setGenreMovies(data.results || []);
       setTotalResults(data.total_results || 0);
+
+      // 🕒 1.5 секунд spinner хадгалах delay
+      setTimeout(() => setLoading(false), 1500);
     } catch (err) {
       console.error("❌ Genre movies fetch error:", err);
+      setLoading(false);
     }
   };
 
@@ -59,6 +65,19 @@ export const Genredetails = () => {
 
   const genreName =
     genresList.find((g) => g.id === parseInt(id))?.name || "Unknown";
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen bg-black text-white">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-16 h-16 border-4 border-gray-300 border-t-white rounded-full"></div>
+          <p className="text-lg font-semibold animate-pulse">
+            tor huleeedee broooo!!!!!!...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-[1280px] flex flex-col gap-[32px] mt-[52px] mb-[32px]">
@@ -93,10 +112,8 @@ export const Genredetails = () => {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="w-[1px] bg-zinc-300"></div>
 
-        {/* Movies List */}
         <div className="flex flex-col gap-[32px] items-center">
           <p className="text-[20px] font-semibold">
             {totalResults} titles in “{genreName}”
@@ -122,7 +139,6 @@ export const Genredetails = () => {
             )}
           </div>
 
-          {/* 🧭 Pagination */}
           <div className="flex items-center gap-4 mt-6">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}

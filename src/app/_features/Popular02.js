@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { Poster } from "../_components/Poster";
 import { SectionHeader } from "../_components/SectionHeader";
 
 const apilink =
-  "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1";
+  "https://api.themoviedb.org/3/movie/popular?language=en-US&page=";
 
 const options = {
   method: "GET",
@@ -21,14 +20,18 @@ export const PopularMovieList02 = () => {
   const [loading, setLouding] = useState(false);
   const [page, setPage] = useState(1);
   const totalPages = 73;
+
   const getData = async (pageNum) => {
     setLouding(true);
-
     try {
       const data = await fetch(apilink + pageNum, options);
       const jsonData = await data.json();
-      setPopularMovieList02(jsonData.results);
-      setLouding(false);
+
+      // бага зэрэг хоцролттой харуулах
+      setTimeout(() => {
+        setPopularMovieList02(jsonData.results);
+        setLouding(false);
+      }, 700);
     } catch (err) {
       console.error("Fetch error:", err);
       setLouding(false);
@@ -38,43 +41,43 @@ export const PopularMovieList02 = () => {
   useEffect(() => {
     getData(page);
   }, [page]);
+
   const getPageNumbers = () => {
     const pages = [];
     if (totalPages <= 10) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else if (page <= 4) {
+      pages.push(1, 2, 3, 4, 5, "...", totalPages);
+    } else if (page >= totalPages - 3) {
+      pages.push(
+        1,
+        "...",
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages
+      );
     } else {
-      if (page <= 4) {
-        pages.push(1, 2, 3, 4, 5, "...", totalPages);
-      } else if (page >= totalPages - 3) {
-        pages.push(
-          1,
-          "...",
-          totalPages - 4,
-          totalPages - 3,
-          totalPages - 2,
-          totalPages - 1,
-          totalPages
-        );
-      } else {
-        pages.push(1, "...", page - 1, page, page + 1, "...", totalPages);
-      }
+      pages.push(1, "...", page - 1, page, page + 1, "...", totalPages);
     }
     return pages;
   };
+
   if (loading) {
     return (
-      <div className="w-[1277px] flex flex-col gap-[32px]">
+      <div className="w-full flex flex-col gap-[32px] animate-pulse px-10">
         <div className="flex justify-between w-full h-8">
           <div className="bg-[#F4F4F5] w-[250px] rounded-2xl"></div>
           <div className="bg-[#F4F4F5] w-[165px] rounded-2xl"></div>
         </div>
-        <div className="[w-1277px] flex flex-wrap gap-8">
-          {Array.from({ length: 20 }).map((_, i) => {
+        <div className="flex flex-wrap gap-8">
+          {Array.from({ length: 20 }).map((_, i) => (
             <div
               key={i}
-              className="bg-[#F4F4F5] w-[229px]h-[439px] rounded-lg"
-            ></div>;
-          })}
+              className="bg-[#F4F4F5] w-[229px] h-[439px] rounded-lg"
+            ></div>
+          ))}
         </div>
       </div>
     );
@@ -95,6 +98,7 @@ export const PopularMovieList02 = () => {
           />
         ))}
       </div>
+
       <div className="flex justify-end items-center w-full mt-6 gap-2">
         <button
           onClick={() => setPage((p) => Math.max(p - 1, 1))}

@@ -19,15 +19,21 @@ export const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showTrailer, setShowTrailer] = useState(false);
   const [trailerKey, setTrailerKey] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         const res = await fetch(apiLink, options);
         const json = await res.json();
-        setMovies(json.results.slice(0, 5));
+        // intentionally slow down loading for 2 seconds
+        setTimeout(() => {
+          setMovies(json.results.slice(0, 5));
+          setLoading(false);
+        }, 2000);
       } catch (err) {
         console.error("Fetch error:", err);
+        setLoading(false);
       }
     };
     fetchMovies();
@@ -60,11 +66,27 @@ export const HeroSection = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
+  // 🌀 LOADING (2 секунд удаан гардаг)
+  if (loading) {
+    return (
+      <div className="w-[1440px] h-[600px] flex items-center justify-center bg-gray-300 mt-[72px]">
+        <div className="flex flex-col items-center gap-4 animate-fadeIn">
+          <div className="w-16 h-16 border-4 border-gray-400 border-t-white rounded-full animate-spin"></div>
+          <p className="text-white text-lg animate-pulse">Loading movies...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (movies.length === 0)
-    return <p className="text-white mt-[72px]">Loading...</p>;
+    return (
+      <p className="text-white mt-[72px] text-center text-lg">
+        No movies found.
+      </p>
+    );
 
   return (
-    <div className="w-[1440px] h-[600px] relative overflow-hidden mt-[72px]">
+    <div className="w-[1440px] h-[600px] relative overflow-hidden mt-[72px] max-sm:w-[375px]">
       <div
         className="flex h-full transition-transform duration-700"
         style={{ transform: `translateX(-${currentIndex * 1440}px)` }}
@@ -77,17 +99,19 @@ export const HeroSection = () => {
             <img
               src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
               alt={movie.title}
-              className="w-full h-full object-cover z-0"
+              className="w-full h-full object-cover z-0 max-sm:object-cover max-sm:w-[375px]"
             />
-            <div className="absolute top-0 left-20 p-12 flex items-center h-full text-white">
+            <div className="absolute top-0 left-20 p-12 flex items-center h-full text-white bg-gradient-to-r from-black/80 to-transparent">
               <div className="flex flex-col gap-6 max-w-[600px] transition-all duration-500">
-                <span className="uppercase text-sm tracking-wider">
+                <span className="uppercase text-sm tracking-wider max-sm:hidden">
                   Now Playing
                 </span>
-                <h1 className="text-5xl font-bold">{movie.title}</h1>
-                <div className="flex items-center gap-2">
+                <h1 className="text-5xl font-bold max-sm:hidden">
+                  {movie.title}
+                </h1>
+                <div className="flex items-center gap-2 max-sm:hidden">
                   <StarIcons />
-                  <span className="text-lg">
+                  <span className="text-lg max-sm:hidden">
                     {movie.vote_average.toFixed(1)}/
                     <span className="text-gray-400">10</span>
                   </span>
@@ -110,6 +134,7 @@ export const HeroSection = () => {
         ))}
       </div>
 
+      {/* Navigation */}
       {currentIndex > 0 && (
         <button
           onClick={prevSlide}
@@ -118,7 +143,6 @@ export const HeroSection = () => {
           ❮
         </button>
       )}
-
       {currentIndex < movies.length - 1 && (
         <button
           onClick={nextSlide}
@@ -128,6 +152,7 @@ export const HeroSection = () => {
         </button>
       )}
 
+      {/* Trailer modal */}
       {showTrailer && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-6 z-[9999]">
           <div className="overflow-hidden shadow-xl bg-black rounded-xl p-4 relative w-[800px] h-[500px]">
